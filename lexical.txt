@@ -34,3 +34,10 @@ for i in range(0,length):
         continue
     if re.match(r"^[^\d\W]\w*\Z", splitCode[i]):
         print("Identifier --> ",splitCode[i])
+        
+        
+        
+###### input
+lexical.txt
+
+int a = b + c;
