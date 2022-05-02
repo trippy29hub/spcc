@@ -76,3 +76,19 @@ void mdtproc(char ln1[50])
 {
     strcpy(d[imdt].instr,ln1); // copy l1 i.e. INSTRUCTIONS in MDT
     }
+    
+    
+// input : 
+asm.asm
+
+MACRO
+ABC &C1,&C2
+SUB AREG,C1
+ADD CREG,C2
+MEND
+ 
+MACRO
+XYZ &Z1,&Z2
+ADD BREG,Z1
+SUB DREG,Z2
+MEND
