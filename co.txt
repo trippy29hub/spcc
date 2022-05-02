@@ -1,0 +1,100 @@
+import pandas as pd
+print("Before optimization...")
+a=pd.read_csv("input.csv")
+c=a.shape
+print(a)
+print("\n")
+b=[]
+for i in range(c[0]):
+    for j in range(i+1,c[0]):
+        if(a['right'][i]==a['right'][j]):
+            for d in range(c[0]):
+                b=b+[(len(a['right'][d]))]
+                for z in range(b[d]):
+                    if(a['right'][d][z]==a['left'][j]):
+                        x=list(a['right'][d])
+                        x[z]=a['left'][i]
+                        l=''.join(x)
+                        a['right'][d]=a['right'][d].replace(a['left'][j],a['left'][i])
+            a['left'][j]=a['left'][i]
+df=pd.DataFrame(a)
+df.to_csv('output1.csv',index=False)
+p=pd.read_csv("output1.csv")
+i=0
+j=i+1
+while(j<c[0]):
+    if(p['right'][i]==p['right'][j]):
+        if(p['left'][i]==p['left'][j]):
+            p.drop([j],axis=0,inplace=True)
+            i+=2
+            j+=1
+        else:
+            i+=1
+    j+=1
+    if(j==c[0]):
+        i=i+1
+        j=i+1
+    if(i==c[0]):
+        j=c[0]
+
+df=pd.DataFrame(p)
+df.to_csv('output1.csv',index=False)
+p=pd.read_csv("output1.csv")
+c=p.shape
+count=0
+i=0
+j=0
+h=1
+while(j<c[0] and i<c[0]):
+    b=[]
+    b=b+[(len(p['right'][j]))]
+    for z in range(b[0]):
+        if(p['right'][j][z]==p['left'][i]):
+            count=1
+    j+=1
+    if(j==c[0]):
+        if(count!=1):
+            p.drop([i],axis=0,inplace=True)
+            df=pd.DataFrame(p)
+            df.to_csv('output1.csv',index=False)
+            p=pd.read_csv("output1.csv")
+            c=p.shape
+        i+=1
+        j=0
+df=pd.DataFrame(p)
+df.to_csv('output1.csv',index=False)
+p=pd.read_csv("output1.csv")
+c=p.shape
+print("The final optimized code is....")
+for i in range(c[0]):
+    print(str(p['left'][i])+"="+str(p['right'][i]))
+
+############### input instructions ############
+INPUT : create a input.csv file and edit it with Excel(windows) or Libre office(linux) ==> column 1 is "left" and column 2 is "right" and put the following values : 
+
+
+left 	right
+a 	9
+b 	c+d
+e 	c+d
+f 	b+e
+r 	f
+
+
+OUTPUT : A output1.csv file gets generated with optimized code
+
+OUTPUT(When code is runned) : The following output is generated in terminal/IDE
+
+Before optimization...
+  left right
+0    a     9
+1    b   c+d
+2    e   c+d
+3    f   b+e
+4    r     f
+
+
+The final optimized code is....
+b=c+d
+f=b+b
+r=f

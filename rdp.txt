@@ -1,0 +1,59 @@
+import java.util.*;
+public class RDP{
+    static String input;
+    static int i;
+    public static void main(String[] args){
+        
+    System.out.println("Grammer : S->aSb|e \n B->b|a\n");
+    System.out.println("input String");
+    Scanner sc = new Scanner (System.in);
+    input=sc.nextLine();
+    i=0;
+    input=input+"$";
+    S();
+    }
+    private static void S(){
+        if(input.charAt(i)=='a'){
+            i++;
+            B();
+            if(i>0){
+                if(input.charAt(i)=='$')
+                    System.out.println("String is accepted");
+                else{
+                    System.out.println("String is invalid");
+                    System.exit(0);
+                }
+            }
+        }
+        else{
+            System.out.println("String is invalid");
+            System.exit(0);
+        }
+    }
+            private static void B(){
+                if(input.charAt(i)=='a'){
+                    i++;
+                    B();
+                }
+                else
+                if(input.charAt(i)=='b')
+                {
+                    i++;
+                    if(input.charAt(i)!='$')
+                    B();
+                }
+                else{
+                    System.out.println("String is invalid");
+                    System.exit(0);
+                }
+            }
+}
+    
+//Output:-
+//Grammer : S->aSb|e 
+ //B->b|a
+
+//input String
+//ababb
+//String is accepted
+

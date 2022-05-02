@@ -1,0 +1,78 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+ 
+char line[100], line1[100], line2[100];
+int imnt=0;     // index for MNT (MNT = MACRO  NAME TABLE )
+int imdt=0; // index for MDT (MDT = MACRO DEFINATION TABLE)
+ 
+// Function declaration
+void mntproc(char a1[50]);
+void mdtproc(char ln1[50]);
+ 
+// struct for MNT (macro name table)
+struct mnt
+{
+    int index;
+    char mname[50];
+}n[50];
+ 
+// struct for MDT (macro definition table)
+struct mdt
+{
+    char instr[50];
+}d[50];
+ 
+// main function
+void main()
+{
+    int i;
+    char s1[50], s2[50];
+    // s1 & S2 = first & Second symbol of line
+ 
+    static const char filename[] = "asm.asm";
+    FILE *file = fopen ( filename, "r" ); // open asm file
+ 
+
+    if(file!=NULL)   // check every line of asm file still EOF
+    {
+        while(fgets(line,sizeof line,file)!=NULL) // fetching first line ( if we use while loop ,then fetching each line upto EOF)
+        {
+            sscanf(line,"%s",s1); // separate first string from line and insert into s1
+            if(strcmp(s1,"MACRO")==0)// check first string of first line is 'MACRO' word or not, if YES then
+            {
+                imnt++; // pre-increment the index of MNT
+                fgets(line1,sizeof line1,file); // scan next line of the same file
+            }
+ 
+            while(strcmp(s1,"MEND")!=0) // execute this loop untill we find 'MEND' word
+            {
+                imdt++; // pre-increment the index of MDT
+                fgets(line2,sizeof line2,file); // scan next line of the same file to fetch the instructions of MACRO
+                sscanf(line2,"%s%s",s1,s2); // separate INSTRUCIONS and its PARAMETER
+                mdtproc(line2); // pass line2 (INSTRUCTIONS) to make entry in MDT
+            }
+        }
+    }
+ 
+ 
+    printf("\n\n------------------------------------------------------");
+    printf("\n\t\t MDT TABLE");     // print MDT
+    printf("\n------------------------------------------------------");
+    printf("\nINDEX\t\tINSTRUCTIONS");
+ 
+    for(i=0;i<imdt;i++) // execute 'for loop' upto index of MDT
+    {
+        printf("\n%d\t\t%s",i+1,d[i+1].instr);
+        }
+ 
+ 
+    fclose(file); // close the above file that is asm file
+    getch();
+    }
+
+// function for MDT
+void mdtproc(char ln1[50])
+{
+    strcpy(d[imdt].instr,ln1); // copy l1 i.e. INSTRUCTIONS in MDT
+    }

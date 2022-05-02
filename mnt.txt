@@ -1,0 +1,77 @@
+Generate MNT table
+
+Main Code:- 
+
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+ 
+char line[100], line1[100], line2[100];
+int imnt=0;     // index for MNT (MNT = MACRO  NAME TABLE )
+int imdt=0;  // index for MDT (MDT = MACRO DEFINATION TABLE)
+ 
+// Function declaration
+void mntproc(char a1[50]);
+ 
+// struct for MNT (macro name table)
+struct mnt
+{
+    int index;
+    char mname[50];
+}n[50];
+ 
+ 
+// main function
+void main()
+{
+    int i;
+    char s1[50], s2[50];
+    // s1 & S2 = first & Second symbol of line
+ 
+    static const char filename[] = "asm.asm";
+    FILE *file = fopen ( filename, "r" ); // open asm file
+ 
+
+    if(file!=NULL)   // check every line of asm file still EOF
+    {
+        while(fgets(line,sizeof line,file)!=NULL) // fetching first line ( if we use while loop ,then fetching each line upto EOF)
+        {
+            sscanf(line,"%s",s1); // separate first string from line and insert into s1
+            if(strcmp(s1,"MACRO")==0)// check first string of first line is 'MACRO' word or not, if YES then
+            {
+                imnt++; // pre-increment the index of MNT
+                fgets(line1,sizeof line1,file); // scan next line of the same file
+                sscanf(line1,"%s%s",s1,s2); // separate MACRO NAME and arguments, insert it to the s1 & s2
+                mntproc(s1); // pass s1 (MACRO NAME) to make entry in MNT
+            }
+            while(strcmp(s1,"MEND")!=0) // execute this loop untill we find 'MEND' word
+            {
+                imdt++; // pre-increment the index of MDT
+                fgets(line2,sizeof line2,file); // scan next line of the same file to fetch the instructions of MACRO
+                sscanf(line2,"%s%s",s1,s2); // separate INSTRUCIONS and its PARAMETER
+            }
+
+        }
+    }    
+ 
+    printf("\n\n------------------------------------------------------");
+    printf("\n\t\t MNT TABLE"); // print MNT
+    printf("\n------------------------------------------------------");
+    printf("\nINDEX\t\tMACRO NAME\tMDT INDEX");
+ 
+    for(i=0;i<imnt;i++) // execute 'for loop' upto index of MNT
+    {
+        printf("\n%d\t\t%s\t\t%d",i+1,n[i+1].mname,n[i+1].index);
+    }
+ 
+    fclose(file); // close the above file that is asm file
+    getch();
+    }
+ 
+// function for MNT
+void mntproc(char a1[50])
+{
+    strcpy(n[imnt].mname,a1); // copy a1 i.e. MACRO NAME in MNT
+    n[imnt].index=imdt+1; // increment index of MNT
+}
+
