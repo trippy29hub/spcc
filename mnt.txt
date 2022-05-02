@@ -75,3 +75,19 @@ void mntproc(char a1[50])
     n[imnt].index=imdt+1; // increment index of MNT
 }
 
+
+
+// input : 
+asm.asm
+
+MACRO
+ABC &C1,&C2
+SUB AREG,C1
+ADD CREG,C2
+MEND
+ 
+MACRO
+XYZ &Z1,&Z2
+ADD BREG,Z1
+SUB DREG,Z2
+MEND
