@@ -1,0 +1,144 @@
+symtab=list()
+lit=list()
+mot=list()
+loc,index=0,0
+
+m=open("MOTRef.txt","r")
+motref=[]
+for i in range(0,21):
+    s=m.readline().split(",")
+    motref.append(s)
+
+print("motref")
+for i in motref:
+    print(i)
+    
+print("input")
+f = open("input.txt", "r")
+lines=[]
+for i in range(0,7):
+    s=f.readline().strip()
+    lines.append(s.split("   "))
+
+for i in lines:
+    while "" in i:
+        i.remove("")
+        
+for i in lines:
+    print(i)
+litindex=0
+for i in lines:
+    if 'START' in i:
+        loc=int(i[-1])
+    elif len(i)==2:
+        for j in motref:
+            if i[0] in j:
+                mot.append((j,loc))
+                break
+        temp=i[-1].split(",")
+        if temp[-1].isdigit():
+            lit.append([temp[-1],-1])
+        loc+=1
+        index+=1
+    elif len(i)==3:
+        symtab.append((i[0],loc))
+        for j in motref:
+            if i[1] in j:
+                mot.append(j)
+                break
+        temp=i[-1].split(",")
+        if temp[-1].isdigit():
+            lit.append([temp[-1],-1])
+        loc+=1
+        index+=1
+    elif i[0]=='LTORG':
+        lit[litindex][1]=loc
+        litindex+=1
+        loc+=1
+
+while litindex<len(lit):
+    lit[litindex][1]=loc
+    litindex+=1
+    loc+=1
+    
+print("lit")
+print(lit)
+print("symtab")
+print(symtab)
+print("mot")
+print(mot)
+    
+# input: input.txt :
+
+       START   200
+       MOVER   R1,3    
+       MOVEM   R1,X       
+L1     MOVER   R2,2    
+       LTORG                 
+X      DS      1           
+       END                  
+      
+      
+MOTRef.txt : 
+
+STOP,00,IS     
+ADD,01,IS
+SUB,02,IS
+MULT,03,IS
+MOVER,04,IS
+MOVEM,05,IS
+COMP,06,IS
+BC,07,IS
+DIV,08,IS
+READ,09,IS
+PRINT,10,IS
+START,01,AD
+END,02,AD
+ORIGIN,03,AD
+EQU,04,AD
+LTORG,05,AD
+DS,01,DL
+DC,02,DL
+AREG,01,RG
+BREG,02,RG
+CREG,03,RG
+
+
+OUTPUT : 
+
+motref
+['STOP', '00', 'IS     \n']
+['ADD', '01', 'IS\n']
+['SUB', '02', 'IS\n']
+['MULT', '03', 'IS\n']
+['MOVER', '04', 'IS\n']
+['MOVEM', '05', 'IS\n']
+['COMP', '06', 'IS\n']
+['BC', '07', 'IS\n']
+['DIV', '08', 'IS\n']
+['READ', '09', 'IS\n']
+['PRINT', '10', 'IS\n']
+['START', '01', 'AD\n']
+['END', '02', 'AD\n']
+['ORIGIN', '03', 'AD\n']
+['EQU', '04', 'AD\n']
+['LTORG', '05', 'AD\n']
+['DS', '01', 'DL\n']
+['DC', '02', 'DL\n']
+['AREG', '01', 'RG\n']
+['BREG', '02', 'RG\n']
+['CREG', '03', 'RG']
+input
+['START', '200']
+['MOVER', 'R1,3']
+['MOVEM', 'R1,X']
+['L1', '  MOVER', 'R2,2']
+['LTORG']
+['X', 'DS', '1']
+['END']
+lit
+[['3', 203], ['2', 205], ['1', 206]]
+symtab
+[('L1', 202), ('X', 204)]
+mot
+[(['MOVER', '04', 'IS\n'], 200), (['MOVEM', '05', 'IS\n'], 201), ['DS', '01', 'DL\n']]
