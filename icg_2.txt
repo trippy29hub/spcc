@@ -48,13 +48,13 @@ if(strcmp(op,"=")==0)
   }
 }
 
-input
+input : input.txt
 + a b t1
 * c d t2
 - t1 t2 t
 = t ? x
 
-output
+output :
 
 MOV R0,a
 ADD R0,b
